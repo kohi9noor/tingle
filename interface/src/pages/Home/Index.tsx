@@ -11,9 +11,24 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { sendPreOffer } from "../../rtc_api";
+import { useState } from "react";
 
 export default function Home() {
   const { state } = useRootContext();
+  const [userPersonalCode, setUserPersonalCode] = useState<string | undefined>(
+    undefined
+  );
+  function handleChatButton() {
+    if (userPersonalCode) {
+      const callType = "CHAT";
+      sendPreOffer(userPersonalCode, callType);
+    } else {
+      alert("please give personal code of the user ");
+    }
+  }
+
+  function handleVideoButton() {}
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -32,7 +47,13 @@ export default function Home() {
           <div className="bg-blue-500 rounded-lg p-3 flex justify-between items-center">
             <span className="font-mono">{state?.socketId}</span>
             <button className="text-white hover:opacity-80">
-              <Copy size={20} />
+              <Copy
+                size={20}
+                onClick={() => {
+                  navigator.clipboard &&
+                    navigator.clipboard.writeText(state?.socketId);
+                }}
+              />
             </button>
           </div>
         </div>
@@ -41,6 +62,9 @@ export default function Home() {
           <div className="mb-6">
             <p className="text-sm mb-2">Personal Code</p>
             <input
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setUserPersonalCode(e.target.value)
+              }
               type="text"
               className="w-full bg-blue-500 rounded-lg p-3 text-white placeholder-blue-200 outline-none"
               placeholder="Enter personal code"
@@ -48,11 +72,17 @@ export default function Home() {
           </div>
 
           <div className="flex space-x-4">
-            <button className="flex-1 bg-white text-blue-600 rounded-lg py-2 px-4 flex items-center justify-center space-x-2 hover:bg-blue-50">
+            <button
+              onClick={handleChatButton}
+              className="flex-1 bg-white text-blue-600 rounded-lg py-2 px-4 flex items-center justify-center space-x-2 hover:bg-blue-50"
+            >
               <ChartBar />
               <span>Chat</span>
             </button>
-            <button className="flex-1 bg-white text-blue-600 rounded-lg py-2 px-4 flex items-center justify-center space-x-2 hover:bg-blue-50">
+            <button
+              onClick={handleVideoButton}
+              className="flex-1 bg-white text-blue-600 rounded-lg py-2 px-4 flex items-center justify-center space-x-2 hover:bg-blue-50"
+            >
               <VideoIcon />
               <span>Video Call</span>
             </button>
