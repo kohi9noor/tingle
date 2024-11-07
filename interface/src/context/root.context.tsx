@@ -16,7 +16,7 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
     allowConnectionFormStrangers: false,
     screenSharingActive: false,
   });
-
+  console.log(state);
   const setSocketId = (socketId: any) => {
     setState((prev) => ({
       ...prev,
@@ -65,7 +65,12 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const socket = new socketHolder("http://localhost:3069");
 
-    socket.connect();
+    socket
+      .connect()
+      .then((id) => {
+        setSocketId(id);
+      })
+      .catch((error) => console.log(error));
 
     setSocketInstance(socket);
 

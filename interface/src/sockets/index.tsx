@@ -1,3 +1,4 @@
+import { useRootContext } from "@/context/root.context";
 import { Socket, io } from "socket.io-client";
 
 export class socketHolder {
@@ -10,12 +11,24 @@ export class socketHolder {
   }
 
   connect() {
-    if (this.socket) {
-      this.socket.connect();
-      console.log("Connected to WebSocket server");
-    } else {
-      console.error("Socket is not initialized");
-    }
+    return new Promise((resolve, reject) => {
+      if (this.socket) {
+        this.socket.connect();
+
+        this.socket.on("connect", () => {
+          console.log("Connected with socket ID:", this.socket?.id);
+          resolve(this.socket?.id);
+        });
+
+        this.socket.on("connect_error", (error) => {
+          console.error("Connection error:", error);
+          reject(error);
+        });
+      } else {
+        console.error("Socket is not initialized");
+        reject(new Error("Socket is not initialized"));
+      }
+    });
   }
 
   emit(event: string, data: any) {

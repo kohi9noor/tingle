@@ -11,38 +11,16 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
 
 export default function Home() {
-  const [state, setState] = useState({
-    socketId: null,
-    localStream: null,
-    remoteStream: null,
-    ScreenSharingStream: null,
-    allowConnectionFormStrangers: false,
-    screenSharingActive: false,
-  });
-
-  const setSocketId = (socketId: any) => {
-    setState((prev) => ({
-      ...prev,
-      socketId: socketId,
-    }));
-  };
-
-  const setLocalStream = (stream: any) => {
-    setState((prev) => ({
-      ...prev,
-      localStream: stream,
-    }));
-  };
+  const { state } = useRootContext();
 
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Left Sidebar */}
       <div className="w-80 bg-blue-600 p-6 text-white">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-4">Meet the Strangers</h1>
+          <h1 className="text-2xl font-bold mb-4">Tingle</h1>
           <p className="text-sm opacity-90">
             Talk with other user by passing his personal code or talk with
             strangers!
@@ -52,7 +30,7 @@ export default function Home() {
         <div className="mb-8">
           <p className="text-sm mb-2">Your Personal Code</p>
           <div className="bg-blue-500 rounded-lg p-3 flex justify-between items-center">
-            <span className="font-mono">DuC5l5OQh</span>
+            <span className="font-mono">{state?.socketId}</span>
             <button className="text-white hover:opacity-80">
               <Copy size={20} />
             </button>
