@@ -21,6 +21,19 @@ io.on("connection", (socket) => {
 
   console.log(connectedPeers);
 
+  socket.on("pre_offer", (data) => {
+    const { callType, code } = data;
+    const connectedPeer = connectedPeers.find((i) => i === code);
+    if (connectedPeer) {
+      const data = {
+        callerSocketId: socket.id,
+        callType,
+      };
+      io.to(code).emit("pre-offer", data);
+    } else {
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
 

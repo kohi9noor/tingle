@@ -16,7 +16,7 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
     allowConnectionFormStrangers: false,
     screenSharingActive: false,
   });
-  console.log(state);
+
   const setSocketId = (socketId: any) => {
     setState((prev) => ({
       ...prev,
@@ -79,6 +79,18 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  const sendPreOffer = (code: string, callType: string, socket: any) => {
+    const data = {
+      callType,
+      code,
+    };
+    socketInstance?.emit("pre_offer", data);
+  };
+
+  const handlePreOffer = (data: any) => {
+    console.log("Pre offer", data);
+  };
+
   return (
     <RootContext.Provider
       value={{
@@ -92,6 +104,7 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
         setScreenSharingStream,
         setSocketId,
         getState,
+        sendPreOffer,
       }}
     >
       {children}

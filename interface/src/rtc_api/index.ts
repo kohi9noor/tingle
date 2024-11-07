@@ -1,1 +1,1 @@
-export const sendPreOffer = (code: string, callType: string) => {};
+import { useRootContext } from "@/context/root.context";

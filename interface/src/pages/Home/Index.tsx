@@ -11,11 +11,10 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { sendPreOffer } from "../../rtc_api";
 import { useState } from "react";
 
 export default function Home() {
-  const { state } = useRootContext();
+  const { state, sendPreOffer } = useRootContext();
   const [userPersonalCode, setUserPersonalCode] = useState<string | undefined>(
     undefined
   );
