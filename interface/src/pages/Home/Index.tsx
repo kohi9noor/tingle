@@ -15,19 +15,25 @@ import { useState } from "react";
 
 export default function Home() {
   const { state, sendPreOffer } = useRootContext();
+
   const [userPersonalCode, setUserPersonalCode] = useState<string | undefined>(
     undefined
   );
   function handleChatButton() {
     if (userPersonalCode) {
-      const callType = "CHAT";
-      sendPreOffer(userPersonalCode, callType);
+      sendPreOffer(userPersonalCode, "CHAT");
     } else {
       alert("please give personal code of the user ");
     }
   }
 
-  function handleVideoButton() {}
+  function handleVideoButton() {
+    if (userPersonalCode) {
+      sendPreOffer(userPersonalCode, "Video");
+    } else {
+      alert("please give personal code of the user ");
+    }
+  }
 
   return (
     <div className="flex h-screen bg-gray-100">

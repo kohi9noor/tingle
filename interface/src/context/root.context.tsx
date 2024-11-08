@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { socketHolder } from "../sockets";
+import IncomingCallDialog from "@/components/IncomingCallDialog";
 
 const RootContext = createContext<any>(null);
 
@@ -7,6 +8,10 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
   const [socketInstance, setSocketInstance] = useState<socketHolder | null>(
     null
   );
+
+  const [showDialog, setShowDialog] = useState(false);
+
+  const [connectedUserDetails, setConnectedUserDetails] = useState<any>(null);
 
   const [state, setState] = useState({
     socketId: null,
@@ -72,6 +77,8 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
       })
       .catch((error) => console.log(error));
 
+    socket.on("pre-offer", handlePreOffer);
+
     setSocketInstance(socket);
 
     return () => {
@@ -86,9 +93,22 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
     };
     socketInstance?.emit("pre_offer", data);
   };
-
   const handlePreOffer = (data: any) => {
     console.log("Pre offer", data);
+    setConnectedUserDetails(data);
+
+    if (data.callType == "Video") {
+      setShowDialog(true);
+    }
+  };
+  const acceptCallHandler = () => {
+    console.log("Call accepted");
+    setShowDialog(false);
+  };
+
+  const rejectCallHandler = () => {
+    console.log("Call rejected");
+    setShowDialog(false);
   };
 
   return (
@@ -105,9 +125,17 @@ function RootAppProvider({ children }: { children: React.ReactNode }) {
         setSocketId,
         getState,
         sendPreOffer,
+        handlePreOffer,
       }}
     >
       {children}
+      {showDialog && connectedUserDetails && (
+        <IncomingCallDialog
+          callType={connectedUserDetails.callType || "Voice"}
+          onAccept={acceptCallHandler}
+          onReject={rejectCallHandler}
+        />
+      )}
     </RootContext.Provider>
   );
 }
